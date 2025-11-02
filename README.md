@@ -67,7 +67,36 @@ npm install -g cdktf-cli
 cdktf --version
 ```
 
-### 4. OpenVPN
+### 4. Windows Remote Management (WinRM)
+
+WinRM must be enabled and properly configured on your Windows Server for remote management operations. Run these PowerShell commands as Administrator on your Windows Server:
+
+```powershell
+# Enable PowerShell remoting
+Enable-PSRemoting -Force
+
+# Configure WinRM
+winrm quickconfig -q
+winrm set winrm/config/service/auth '@{Basic="true"}'
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="2048"}'
+
+# Open firewall ports for WinRM
+New-NetFirewallRule -Name "WinRM-HTTP-In-TCP" -DisplayName "Windows Remote Management (HTTP-In)" -Direction Inbound -LocalPort 5985 -Protocol TCP -Action Allow
+
+# To enable firewall for any type of Network (Private, Domain or Public)
+Set-NetFirewallRule -Name "WINRM-HTTP-In-TCP-PUBLIC" -RemoteAddress Any # Where WINRM-HTTP-In-TCP-PUBLIC is name of firewall rule
+```
+
+⚠️ **Security Note:** The above configuration enables basic authentication and unencrypted traffic for WinRM. In production environments, you should:
+- Use HTTPS (port 5986) instead of HTTP
+- Configure SSL certificates
+- Use more restrictive firewall rules
+- Consider using NTLM or Kerberos authentication
+
+For production setup, consult your security team and Windows Server documentation.
+
+### 5. OpenVPN
 
 The OpenVPN command-line tool is required for VPN connectivity.
 

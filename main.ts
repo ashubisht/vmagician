@@ -7,12 +7,24 @@ import { IsoStack } from "./stacks/iso-stack";
 dotenv.config();
 
 const app = new App();
+
 new OpenVPNStack(app, "vpn-stack", {
   configPath: process.env.OPENVPN_CONFIG_PATH || "./config.ovpn",
   credentialsPath: process.env.OPENVPN_CREDENTIALS_PATH || "./credentials.txt"
 });
+
 new IsoStack(app, "ubuntu-iso-stack", {
-  isoPath: process.env.UBUNTU_ISO_PATH || "./ubuntu.iso",
-  isoUrl: process.env.UBUNTU_ISO_URL || "https://releases.ubuntu.com/22.04.4/ubuntu-22.04.4-live-server-amd64.iso"
+  winrmConfig: {
+    host: <string>process.env.WINRM_HOST,
+    port: process.env.WINRM_PORT ? parseInt(process.env.WINRM_PORT) : 5985,
+    user: <string>process.env.WINRM_USERNAME,
+    password: <string>process.env.WINRM_PASSWORD,
+    https: process.env.WINRM_USE_HTTPS === "true",
+    use_ntlm: process.env.WINRM_USE_NTLM_AUTH === "true",
+    insecure: process.env.WINRM_INSECURE === "true",
+    timeout: process.env.WINRM_TIMEOUT || "5m"
+  },
+  isoPath: process.env.ISO_PATH || "./ubuntu.iso",
+  isoUrl: process.env.ISO_URL || "https://releases.ubuntu.com/22.04.4/ubuntu-22.04.4-live-server-amd64.iso"
 });
 app.synth();

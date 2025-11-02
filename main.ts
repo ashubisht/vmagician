@@ -2,6 +2,7 @@ import * as dotenv from "dotenv";
 import { App } from "cdktf";
 import { OpenVPNStack } from "./stacks/vpn-stack";
 import { IsoStack } from "./stacks/iso-stack";
+import { WindowsServerStack } from "./stacks/windows-server-stack";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -24,7 +25,28 @@ new IsoStack(app, "ubuntu-iso-stack", {
     insecure: process.env.WINRM_INSECURE === "true",
     timeout: process.env.WINRM_TIMEOUT || "5m"
   },
-  isoPath: process.env.ISO_PATH || "./ubuntu.iso",
+  isoPath: <string>process.env.ISO_PATH,
   isoUrl: process.env.ISO_URL || "https://releases.ubuntu.com/22.04.4/ubuntu-22.04.4-live-server-amd64.iso"
 });
+
+new WindowsServerStack(app, "windows-vm-stack", {
+  vmName: <string>process.env.VM_NAME,
+  vmPath: <string>process.env.VM_PATH,
+  memoryStartupBytes: process.env.VM_MEMORY || "4GB",
+  processorCount: process.env.VM_PROCESSORS ? parseInt(process.env.VM_PROCESSORS) : 2,
+  switchName: process.env.VM_SWITCH || "Default Switch",
+  generation: process.env.VM_GENERATION ? parseInt(process.env.VM_GENERATION) : 2,
+  isoPath: <string>process.env.ISO_PATH,
+   winrmConfig: {
+    host: <string>process.env.WINRM_HOST,
+    port: process.env.WINRM_PORT ? parseInt(process.env.WINRM_PORT) : 5985,
+    user: <string>process.env.WINRM_USERNAME,
+    password: <string>process.env.WINRM_PASSWORD,
+    https: process.env.WINRM_USE_HTTPS === "true",
+    use_ntlm: process.env.WINRM_USE_NTLM_AUTH === "true",
+    insecure: process.env.WINRM_INSECURE === "true",
+    timeout: process.env.WINRM_TIMEOUT || "5m"
+  }
+});
+
 app.synth();

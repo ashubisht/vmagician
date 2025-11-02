@@ -4,7 +4,28 @@ Deploy VM on HyperV server using Terraform and CDKTF (Cloud Development Kit for 
 
 ## Prerequisites
 
+
 This project requires the following dependencies to be installed:
+
+### 0. Enable Hyper-V on Windows Server
+
+Hyper-V must be enabled on your Windows Server to use this project. Run the following PowerShell command as Administrator:
+
+```powershell
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+```
+
+After running the command, restart your server if prompted.
+
+You can verify Hyper-V is enabled by running:
+
+```powershell
+Get-WindowsFeature -Name Hyper-V
+```
+
+The `Install State` should be `Installed`.
+
+For more details, see the official Microsoft documentation: https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/
 
 ### 1. Node.js
 

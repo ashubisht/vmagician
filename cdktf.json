@@ -3,9 +3,9 @@
   "app": "npx ts-node main.ts",
   "projectId": "f21aa2cf-5d18-4bc2-9be2-6b3d68d5649b",
   "sendCrashReports": "false",
-  "terraformProviders": ["Telmate/proxmox@=2.9.14"],
+  "terraformProviders": [
+    "Telmate/proxmox@3.0.2-rc05"
+  ],
   "terraformModules": [],
-  "context": {
-
-  }
+  "context": {}
 }

@@ -20,9 +20,7 @@
     "node": ">=18.0"
   },
   "dependencies": {
-    "@cdktf/provider-docker": "latest",
     "@cdktf/provider-null": "latest",
-    "@cdktf/provider-postgresql": "latest",
     "cdktf": "^0.21.0",
     "constructs": "^10.4.2",
     "dotenv": "^17.2.3"

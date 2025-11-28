@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@cdktf/provider-null": "latest",
+    "@cdktf/provider-tls": "^11.0.0",
     "cdktf": "^0.21.0",
     "constructs": "^10.4.2",
     "dotenv": "^17.2.3"

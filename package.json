@@ -1,5 +1,5 @@
 {
-  "name": "hyperv-deploy",
+  "name": "vmagician",
   "version": "1.0.0",
   "main": "main.js",
   "types": "main.ts",

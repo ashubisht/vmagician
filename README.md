@@ -204,7 +204,7 @@ This script will:
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
-   cd hyperv-deploy
+   cd vmagician
    ```
 
 2. **Install Node.js dependencies:**

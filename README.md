@@ -1,13 +1,24 @@
-# hyperv-deploy
 
-Deploy VM on HyperV server using Terraform and CDKTF (Cloud Development Kit for Terraform).
+# VMagician 🪄
+
+Welcome to **VMagician** – your spellbinding toolkit for conjuring virtual machines out of thin air! Whether you’re a wizard of Windows Hyper-V or a prodigy of Proxmox, VMagician lets you spin up, manage, and vanish VMs with a flick of your wand (or, you know, a single command). Powered by Terraform and CDKTF, it’s the magical way to automate your infrastructure, no incantations required.
+
+✨ **Why VMagician?**
+- Multi-platform: Cast your VM spells on both Hyper-V and Proxmox.
+- Code as magic: Define your infrastructure in TypeScript and let the magic happen.
+- Flexible, fun, and open source – because automation should never be boring!
+
+Ready to become a VM sorcerer? Read on!
 
 ## Prerequisites
 
+This project requires the following dependencies and setup for your chosen virtualization platform.
 
-This project requires the following dependencies to be installed:
+### 1. Virtualization Platforms
 
-### 0. Enable Hyper-V on Windows Server
+Choose and configure one of the following platforms.
+
+#### Hyper-V
 
 Hyper-V must be enabled on your Windows Server to use this project. Run the following PowerShell command as Administrator:
 
@@ -54,7 +65,7 @@ node --version
 npm --version
 ```
 
-### 2. Terraform
+### 3. Terraform
 
 Terraform is required for infrastructure provisioning.
 
@@ -74,7 +85,7 @@ Terraform is required for infrastructure provisioning.
 terraform --version
 ```
 
-### 3. CDKTF (Cloud Development Kit for Terraform)
+### 4. CDKTF (Cloud Development Kit for Terraform)
 
 CDKTF is installed as a Node.js package dependency when you install project dependencies (see Setup section below).
 
@@ -88,7 +99,7 @@ npm install -g cdktf-cli
 cdktf --version
 ```
 
-### 4. Windows Remote Management (WinRM)
+### 5. Windows Remote Management (WinRM) for Hyper-V
 
 WinRM must be enabled and properly configured on your Windows Server for remote management operations. Run these PowerShell commands as Administrator on your Windows Server:
 
@@ -117,7 +128,7 @@ Set-NetFirewallRule -Name "WINRM-HTTP-In-TCP-PUBLIC" -RemoteAddress Any # Where 
 
 For production setup, consult your security team and Windows Server documentation.
 
-### 5. OpenVPN
+### 6. OpenVPN
 
 The OpenVPN command-line tool is required for VPN connectivity.
 
@@ -138,6 +149,28 @@ The OpenVPN command-line tool is required for VPN connectivity.
 ```bash
 openvpn --version
 ```
+
+For more details, see the official Microsoft documentation: https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/
+
+#### Proxmox VE
+
+Ensure your Proxmox VE server is set up and accessible. You will need to create an API token for authentication.
+
+**Create an API Token:**
+
+1.  Log in to the Proxmox VE web interface.
+2.  Go to **Datacenter > Permissions > API Tokens**.
+3.  Click **Add**.
+4.  Select a user (e.g., `root@pam`) and enter a **Token ID** (e.g., `cdktf-token`).
+5.  Optionally, set an expiration date and disable permissions for specific paths.
+6.  Click **Add**.
+7.  **Important:** Copy the **Token ID** and **Secret** immediately. The secret will not be shown again.
+
+You will use the Token ID and Secret in your environment variables (`PROXMOX_TOKEN_ID` and `PROXMOX_TOKEN_SECRET`).
+
+For more details, see the [Proxmox VE API documentation](https://pve.proxmos.com/pve-docs/api-viewer/index.html).
+
+### 2. Node.js
 
 ## Setup
 
@@ -196,12 +229,12 @@ openvpn --version
 
 6. **Configure environment variables:**
    
-   Copy the example environment file and edit with your OpenVPN paths:
+   Copy the example environment file and edit with your configuration:
    ```bash
    cp .env.example .env
    ```
    
-   Edit `.env` with your actual OpenVPN configuration file path and credentials file path.
+   Edit `.env` with your Hyper-V or Proxmox details, as well as your OpenVPN paths. See the `.env.example` file for a full list of variables.
 
 ## Usage
 

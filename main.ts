@@ -3,6 +3,7 @@ import { App } from "cdktf";
 import { OpenVPNStack } from "./stacks/vpn-stack";
 import { IsoStack } from "./stacks/iso-stack";
 import { WindowsServerStack } from "./stacks/windows-server-stack";
+import { ProxmoxStack } from "./stacks/proxmox-stack";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -37,7 +38,7 @@ new WindowsServerStack(app, "windows-vm-stack", {
   switchName: process.env.VM_SWITCH || "Default Switch",
   generation: process.env.VM_GENERATION ? parseInt(process.env.VM_GENERATION) : 2,
   isoPath: <string>process.env.ISO_PATH,
-   winrmConfig: {
+  winrmConfig: {
     host: <string>process.env.WINRM_HOST,
     port: process.env.WINRM_PORT ? parseInt(process.env.WINRM_PORT) : 5985,
     user: <string>process.env.WINRM_USERNAME,
@@ -47,6 +48,24 @@ new WindowsServerStack(app, "windows-vm-stack", {
     insecure: process.env.WINRM_INSECURE === "true",
     timeout: process.env.WINRM_TIMEOUT || "5m"
   }
+});
+
+new ProxmoxStack(app, "proxmox-vm-stack", {
+  proxmoxUrl: <string>process.env.PROXMOX_URL,
+  proxmoxNode: <string>process.env.PROXMOX_NODE,
+  proxmoxTokenId: <string>process.env.PROXMOX_TOKEN_ID,
+  proxmoxTokenSecret: <string>process.env.PROXMOX_TOKEN_SECRET,
+  vmName: <string>process.env.PROXMOX_VM_NAME,
+  vmId: process.env.VM_ID ? parseInt(process.env.VM_ID) : 100,
+  isoStorage: <string>process.env.ISO_STORAGE,
+  isoImage: <string>process.env.ISO_IMAGE,
+  diskStorage: <string>process.env.DISK_STORAGE,
+  diskSize: process.env.DISK_SIZE ? parseInt(process.env.DISK_SIZE) : 10,
+  memory: process.env.VM_MEMORY ? parseInt(process.env.VM_MEMORY) : 2048,
+  cores: process.env.VM_PROCESSORS ? parseInt(process.env.VM_PROCESSORS) : 2,
+  networkBridge: <string>process.env.NETWORK_BRIDGE,
+  networkModel: <string>process.env.NETWORK_MODEL,
+  osType: <string>process.env.PROXMOX_OS_TYPE
 });
 
 app.synth();

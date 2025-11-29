@@ -41,7 +41,7 @@ export class ProxmoxTemplateStack extends TerraformStack {
       algorithm: "ED25519",
     });
 
-    new VmQemu(this, "vm", {
+    const vm = new VmQemu(this, "vm", {
       dependsOn: [privateKey],
       name: config.vmName,
       targetNode: config.proxmoxNode,
@@ -49,6 +49,7 @@ export class ProxmoxTemplateStack extends TerraformStack {
       clone: config.templateName,
       osType: "cloud-init",
       agent: 1,
+      agentTimeout: 300,
       scsihw: "virtio-scsi-pci",
       memory: config.memory,
       cpu: {
@@ -61,6 +62,10 @@ export class ProxmoxTemplateStack extends TerraformStack {
         storage: config.diskStorage,
         size: `${config.diskSize}G`,
         type: "disk",
+      }, {
+        slot: "ide2",
+        storage: config.diskStorage,
+        type: "cloudinit"
       }],
       network: [{
         id: 0,
@@ -75,9 +80,13 @@ export class ProxmoxTemplateStack extends TerraformStack {
 
     if (!config.sshPublicKeys) {
       new TerraformOutput(this, "private-key", {
-        value: privateKey.privateKeyPem,
+        value: privateKey.privateKeyOpenssh,
         sensitive: true
       });
     }
+
+    new TerraformOutput(this, "vm-ip", {
+      value: vm.defaultIpv4Address,
+    });
   }
 }

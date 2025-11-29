@@ -25,7 +25,7 @@ wget -q --show-progress $IMAGE_URL -O $IMAGE_NAME
 
 echo "Installing qemu-guest-agent..."
 # Install qemu-guest-agent and reset machine-id for unique clones
-virt-customize -a $IMAGE_NAME --install qemu-guest-agent --run-command 'truncate -s 0 /etc/machine-id'
+virt-customize -a $IMAGE_NAME --install qemu-guest-agent,net-tools --run-command 'systemctl enable qemu-guest-agent' --run-command 'cloud-init clean' --run-command 'rm -rf /var/lib/cloud/instances/*' --run-command 'truncate -s 0 /etc/machine-id'
 
 echo "Creating VM $TEMPLATE_ID ($TEMPLATE_NAME)..."
 qm create $TEMPLATE_ID --name "$TEMPLATE_NAME" --memory $MEMORY --cores $CORES --net0 virtio,bridge=$BRIDGE
@@ -37,7 +37,7 @@ echo "Configuring VM hardware..."
 qm set $TEMPLATE_ID --scsihw virtio-scsi-pci --scsi0 $STORAGE:vm-$TEMPLATE_ID-disk-0
 qm set $TEMPLATE_ID --boot order=scsi0
 qm set $TEMPLATE_ID --ide2 $STORAGE:cloudinit
-qm set $TEMPLATE_ID --serial0 socket --vga serial0
+qm set $TEMPLATE_ID --serial0 socket --vga std
 qm set $TEMPLATE_ID --agent enabled=1
 
 echo "Converting to template..."

@@ -170,6 +170,33 @@ You will use the Token ID and Secret in your environment variables (`PROXMOX_TOK
 
 For more details, see the [Proxmox VE API documentation](https://pve.proxmos.com/pve-docs/api-viewer/index.html).
 
+**Create Ubuntu Cloud-Init Template:**
+
+For the Proxmox template-based VM stack (`proxmox-template-vm-stack`), you need to create a cloud-init enabled Ubuntu template on your Proxmox server.
+
+1.  **Install libguestfs-tools on Proxmox:**
+    ```bash
+    ssh root@<PROXMOX_IP>
+    apt-get update && apt-get install libguestfs-tools -y
+    ```
+
+2.  **Copy and run the template creation script:**
+    ```bash
+    # From your local machine
+    scp create_template.sh root@<PROXMOX_IP>:~/
+    
+    # On Proxmox server
+    ssh root@<PROXMOX_IP>
+    chmod +x create_template.sh
+    ./create_template.sh
+    ```
+
+This script will:
+- Download the latest Ubuntu Noble (24.04) cloud image
+- Install and enable qemu-guest-agent
+- Clean cloud-init state for proper instance initialization
+- Create a Proxmox VM template (ID: 9000) ready for cloning
+
 ### 2. Node.js
 
 ## Setup
@@ -177,7 +204,7 @@ For more details, see the [Proxmox VE API documentation](https://pve.proxmos.com
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
-   cd hyperv-deploy
+   cd vmagician
    ```
 
 2. **Install Node.js dependencies:**
@@ -237,6 +264,40 @@ For more details, see the [Proxmox VE API documentation](https://pve.proxmos.com
    Edit `.env` with your Hyper-V or Proxmox details, as well as your OpenVPN paths. See the `.env.example` file for a full list of variables.
 
 ## Usage
+
+### Proxmox Template-Based VM Stack
+
+The `proxmox-template-vm-stack` creates VMs from the Ubuntu cloud-init template.
+
+**Deploy a VM:**
+```bash
+cdktf deploy proxmox-template-vm-stack
+```
+
+**Get the VM IP address:**
+```bash
+terraform output -state=terraform.proxmox-template-vm-stack.tfstate vm-ip
+```
+
+**Get the SSH private key:**
+```bash
+terraform output -state=terraform.proxmox-template-vm-stack.tfstate -raw private-key > priv
+chmod 400 priv
+```
+
+**SSH into the VM:**
+```bash
+ssh -i priv <CI_USER>@<VM_IP>
+```
+
+Replace `<CI_USER>` with the value from your `.env` file and `<VM_IP>` with the IP from the output.
+
+**Destroy the VM:**
+```bash
+cdktf destroy proxmox-template-vm-stack
+```
+
+### General Usage
 
 ### Generate Terraform configuration:
 ```bash

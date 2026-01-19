@@ -23,6 +23,7 @@ export interface ProxmoxTemplateStackConfig {
   sshPublicKeys: string;
   ciUser?: string;
   ciPassword?: string;
+  vlanTag?: number;
 }
 
 export class ProxmoxTemplateStack extends TerraformStack {
@@ -47,6 +48,7 @@ export class ProxmoxTemplateStack extends TerraformStack {
       targetNode: config.proxmoxNode,
       vmid: config.vmId,
       clone: config.templateName,
+      fullClone: true,
       osType: "cloud-init",
       agent: 1,
       agentTimeout: 300,
@@ -71,6 +73,8 @@ export class ProxmoxTemplateStack extends TerraformStack {
         id: 0,
         bridge: config.networkBridge,
         model: config.networkModel,
+        tag: config.vlanTag,
+        firewall: false,
       }],
       sshkeys: config.sshPublicKeys || privateKey.publicKeyOpenssh,
       ciuser: config.ciUser,

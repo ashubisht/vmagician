@@ -89,4 +89,24 @@ new ProxmoxTemplateStack(app, "proxmox-template-vm-stack", {
   ciPassword: process.env.CI_PASSWORD
 });
 
+new ProxmoxTemplateStack(app, "proxmox-template-vm-stack-vaultwarden-node", {
+  proxmoxUrl: <string>process.env.PROXMOX_URL,
+  proxmoxNode: <string>process.env.PROXMOX_NODE,
+  proxmoxTokenId: <string>process.env.PROXMOX_TOKEN_ID,
+  proxmoxTokenSecret: <string>process.env.PROXMOX_TOKEN_SECRET,
+  vmName: <string>process.env.PROXMOX_VM_NAME,
+  vmId: process.env.VM_ID ? parseInt(process.env.VM_ID) : 100,
+  templateName: <string>process.env.PROXMOX_TEMPLATE_NAME,
+  diskStorage: <string>process.env.DISK_STORAGE,
+  diskSize: process.env.DISK_SIZE ? parseInt(process.env.DISK_SIZE) : 10,
+  memory: process.env.VM_MEMORY ? parseInt(process.env.VM_MEMORY) : 2048,
+  cores: process.env.VM_PROCESSORS ? parseInt(process.env.VM_PROCESSORS) : 2,
+  networkBridge: <string>process.env.NETWORK_BRIDGE,
+  networkModel: <string>process.env.NETWORK_MODEL,
+  sshPublicKeys: <string>process.env.SSH_PUBLIC_KEY,
+  ciUser: <string>process.env.CI_USER,
+  ciPassword: <string>process.env.CI_PASSWORD,
+  vlanTag: <string>process.env.VLAN_TAG ? parseInt(<string>process.env.VLAN_TAG, 10): undefined
+});
+
 app.synth();

@@ -79,6 +79,7 @@ export class ProxmoxTemplateStack extends TerraformStack {
       sshkeys: config.sshPublicKeys || privateKey.publicKeyOpenssh,
       ciuser: config.ciUser,
       cipassword: config.ciPassword,
+      ciupgrade: true,
       ipconfig0: "ip=dhcp",
     });
 
